@@ -4,6 +4,7 @@ from patterns.factory_method import NotificationFactory, NotificationType
 from patterns.abstract_factory import (
         OSType, UIFactoryProducer, test_abstract_factory as test_af
     )
+from patterns.builder import test_builder as test_builder_func
 
 router = APIRouter()
 
@@ -72,4 +73,19 @@ async def test_abstract_factory(os_type: str):
         "pattern": "Abstract Factory",
         "result": result,
         "description": "Абстрактная фабрика создает семейства связанных объектов"
+    }
+
+@router.get("/builder/test")
+async def test_builder():
+    """
+    Тестирование паттерна Builder.
+    Создает различные HTTP запросы с разными конфигурациями.
+    """
+    
+    results = await test_builder_func()
+    
+    return {
+        "pattern": "Builder",
+        "results": results,
+        "description": "Builder позволяет создавать сложные объекты пошагово, скрывая детали конструирования"
     }
