@@ -1,6 +1,9 @@
 from fastapi import APIRouter
 from patterns.singleton import DatabaseConnection
 from patterns.factory_method import NotificationFactory, NotificationType
+from patterns.abstract_factory import (
+        OSType, UIFactoryProducer, test_abstract_factory as test_af
+    )
 
 router = APIRouter()
 
@@ -46,4 +49,27 @@ async def test_factory_method():
         "pattern": "Factory Method",
         "notifications": notifications,
         "description": "Фабричный метод создает объекты, не указывая конкретных классов"
+    }
+
+@router.get("/abstract-factory/test/{os_type}")
+async def test_abstract_factory(os_type: str):
+    """
+    Тестирование паттерна Abstract Factory.
+    Создает набор UI-компонентов для указанной ОС.
+    """
+    
+    try:
+        os_enum = OSType(os_type.lower())
+    except ValueError:
+        return {
+            "error": f"Неизвестный тип ОС: {os_type}",
+            "available_os": [os.value for os in OSType]
+        }
+    
+    result = await test_af(os_enum)
+    
+    return {
+        "pattern": "Abstract Factory",
+        "result": result,
+        "description": "Абстрактная фабрика создает семейства связанных объектов"
     }
